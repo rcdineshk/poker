@@ -1,0 +1,10 @@
+KH,JH,QH,AH,TH
+8D,9D,TD,JD,QD
+4d,4s,4c,5c,4h
+3H,kd,3D,KC,3s
+2S,6S,TS,5S,KS
+2c,3s,5c,6h,4d
+TC,7C,7S,KH,7D
+KH,QD,QH,KS,JS
+AS,TD,4C,AC,8H
+2c,5d,9h,Ts,Kc
