@@ -15,13 +15,13 @@ import java.util.Comparator;
  * @author dirc
  */
 class Card{
-    char suite;
-    char rank;
-    int rankValue;
-    int suiteValue;
-    int score;
-    String rankIndex = " A23456789TJQK";
-    String suiteIndex = "SHDC";
+    private char suite;
+    private char rank;
+    private int rankValue;
+    private int suiteValue;
+    private int score;
+    private String rankIndex = " A23456789TJQK";
+    private String suiteIndex = "SHDC";
     
     public Card(String card){
         
@@ -42,6 +42,22 @@ class Card{
     
     public int compareScore(Card card){
         return (this.score - card.score);    
+    }
+    
+    public String getRank(){
+        return new String(""+this.rank);
+    }
+    
+    public int getRankValue(){
+        return this.rankValue;
+    }
+    
+    public String getSuite(){
+        return new String(""+this.suite);
+    }
+    
+    public int getSuiteValue(){
+        return this.suiteValue;
     }
 }
 public class PokerValuation {
