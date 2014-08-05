@@ -1,24 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package poker;
 
-package pokervaluation;
+import java.io.*;
+import java.util.Arrays;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/**
- *
- * @author dirc
- */
+
 class Card{
-    private char suite;
+    private char suit;
     private char rank;
     private int rankValue;
-    private int suiteValue;
+    private int suitValue;
     private int score;
     private String rankIndex = " A23456789TJQK";
     private String suiteIndex = "SHDC";
@@ -26,14 +20,15 @@ class Card{
     public Card(String card){
         
         this.rank = card.charAt(0);
-        this.suite = card.charAt(1);
+        this.suit = card.charAt(1);
         this.rankValue = rankIndex.indexOf(""+rank);
-        this.suiteValue = suiteIndex.indexOf(""+suite);
-        this.score = 13 * suiteValue + rankValue;
+        this.suitValue = suiteIndex.indexOf(""+suit);
+        this.score = 13 * suitValue + rankValue;
     }
     
+    
     public String toString(){
-        return new String(""+rank + suite);
+        return new String(""+rank + suit);
     }
     
     public int compareValue(Card card){
@@ -53,27 +48,34 @@ class Card{
     }
     
     public String getSuite(){
-        return new String(""+this.suite);
+        return new String(""+this.suit);
     }
     
-    public int getSuiteValue(){
-        return this.suiteValue;
+    public int getSuitValue(){
+        return this.suitValue;
     }
 }
-public class PokerValuation {
+
+class PokerValuation
+{
 
     ArrayList<Card> hand;
-    public PokerValuation(String cardsSet){
+    
+    public PokerValuation(String cardsSet)
+    {
         hand = new ArrayList<Card>();
         parseInput(cardsSet);
     } 
-    private void parseInput(String cardsSet){
+ 
+    private void parseInput(String cardsSet)
+    {
         String[] cards = cardsSet.toUpperCase().split(",");
         for(String card: cards)
         {
                 hand.add(new Card(card.trim()));
         }
     }
+    
     public ArrayList<Card> sortByRank(){
         
         Collections.sort(hand,new Comparator<Card>(){
@@ -84,7 +86,9 @@ public class PokerValuation {
                                             } );
         return hand;
     }
-    public ArrayList<Card> sortByScore(){
+    
+    public ArrayList<Card> sortByScore()
+    {
         Collections.sort(hand,new Comparator<Card>(){
                                             @Override
                                             public int compare(Card o1, Card o2) {
@@ -93,14 +97,161 @@ public class PokerValuation {
                                             } );
         return hand;
     }
-    /**
-     * @param args the command line arguments
-     */
     
-    public static void main(String[] args) {
-        // TODO code application logic here
-     PokerValuation poker = new PokerValuation("KS,AD,4C,4S,3S");
-     System.out.println(poker.sortByRank());
+    public boolean isRoyalFlush()
+    {
+        return isStraightFlush() && hand.get(4).getRankValue() == 13 && hand.get(0).getRankValue() == 1;
+    }
+	 
+	 public boolean isStraightFlush()
+    {
+        return isFlush() && isStraight();
+    }
+	 
+	 public boolean isFourOfAKind()
+    {
+        
+        int commonRank = hand.get(2).getRankValue();
+        if (hand.get(0).getRankValue() == commonRank || hand.get(4).getRankValue() == commonRank)
+        {
+            if (hand.get(1).getRankValue() == commonRank && hand.get(3).getRankValue() == commonRank)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
+    public boolean isFullHouse()
+    {
+        //Sort cards by rank while implementation
+        if (hand.get(0).getRankValue() == hand.get(1).getRankValue() && hand.get(3).getRankValue() == hand.get(4).getRankValue())
+        {
+            if (hand.get(2).getRankValue() == hand.get(1).getRankValue() || hand.get(2).getRankValue() == hand.get(3).getRankValue())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isFlush()
+    {
+        int commonSuit = hand.get(0).getSuitValue();
+        if (hand.get(1).getSuitValue() == commonSuit && hand.get(2).getSuitValue() == commonSuit && hand.get(3).getSuitValue() == commonSuit && hand.get(4).getSuitValue() == commonSuit)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+   
+    
+    
+   public boolean isStraight()
+   {
+	   int start = 0;
+	   if(hand.get(0).getRankValue() == 1 && hand.get(1).getRankValue() == 10)
+   	{
+   		start = 2;
+   	}
+   	for( int i = start ; i < hand.size()-1 ; i++ )
+   	{
+   		if(hand.get(i+1).getRankValue()-hand.get(i).getRankValue() != 1)
+   		{
+   			return false;
+   		}
+   	}
+   	return true;
+   }
+   
+   public boolean isThreeOfAKind()
+   {
+       for(int i= 0 ; i < hand.size()-2 ; i ++)
+       {
+       if(hand.get(i).getRankValue() == hand.get(i+2).getRankValue())
+        	{
+       			return true;
+        	}
+       }
+       
+       	return false;
+       
+   }
+   
+   public boolean isTwoPair()
+   {
+   	int two_pair_check=0;
+       for(int i= 0 ; i < hand.size()-1 ; i ++)
+       {
+       if(hand.get(i).getRankValue() == hand.get(i+1).getRankValue())
+        	{
+       			two_pair_check+=1;
+        	}
+       }
+       if(two_pair_check == 2)
+       {
+       		return true;
+       }
+       return false;
+       
+   }
+   
+   public boolean isOnePair()
+   {
+       for(int i= 0 ; i < hand.size()-1 ; i ++)
+       {
+       if(hand.get(i).getRankValue() == hand.get(i+1).getRankValue())
+        {
+       	return true;
+        }
+       }
+       return false;
+       
+   }
+   
+   public String decidePokerValuation()
+   {
+	   sortByRank();
+	   if (isRoyalFlush())
+	   {
+		   return "Royal Flush";
+	   }
+	   else if(isStraightFlush())
+	   {
+		   return "Straight Flush";
+	   }
+	   else if(isFourOfAKind())
+	   {
+		   return "Four Of A Kind";
+	   }
+	   else if(isFullHouse())
+	   {
+		   return "Full House";
+	   }
+	   else if(isFlush())
+	   {
+		   return "Flush";
+	   }
+	   else if(isStraight())
+	   {
+		   return "Straight";
+	   }
+	   else if(isThreeOfAKind())
+	   {
+		   return "Three Of A Kind";
+	   }
+	   else if(isTwoPair())
+	   {
+		   return "Two Pair";
+	   }
+	   else if(isOnePair())
+	   {
+		   return "One Pair";
+	   }
+	   else
+	   {
+		   return "High Card";
+	   }
+   }  
 }
