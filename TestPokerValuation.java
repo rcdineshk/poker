@@ -1,4 +1,4 @@
-package poker;
+package denomination;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
